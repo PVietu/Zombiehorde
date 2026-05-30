@@ -1,21 +1,29 @@
-import { useEffect, useRef } from 'react';
-import { ZombieGame } from './game/ZombieGame';
+import { useState } from 'react';
+import { MainMenu } from './components/MainMenu';
+import { GameCanvas } from './components/GameCanvas';
+
+export type GameMode = 'menu' | 'solo' | 'multiplayer';
+
+export interface GameConfig {
+  mode: GameMode;
+  serverUrl?: string;
+}
 
 export default function App() {
-  const mountedRef = useRef(false);
+  const [gameConfig, setGameConfig] = useState<GameConfig | null>(null);
 
-  useEffect(() => {
-    if (mountedRef.current) return;
-    mountedRef.current = true;
+  const startGame = (config: GameConfig) => {
+    setGameConfig(config);
+  };
 
-    // Start the game
-    const game = new ZombieGame();
-    game.init();
+  const returnToMenu = () => {
+    setGameConfig(null);
+  };
 
-    return () => {
-      game.destroy();
-    };
-  }, []);
-
-  return <div id="game-root" style={{ width: '100vw', height: '100vh', overflow: 'hidden', background: '#000' }} />;
+  return (
+    <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', background: '#000' }}>
+      {!gameConfig && <MainMenu onStart={startGame} />}
+      {gameConfig && <GameCanvas config={gameConfig} onReturn={returnToMenu} />}
+    </div>
+  );
 }

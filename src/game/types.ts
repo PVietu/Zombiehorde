@@ -1,135 +1,96 @@
-// Game Types and Interfaces
+// ============================================================
+// TYPE DEFINITIONS — Zombie Horde
+// ============================================================
 
-export interface Vector3 {
-  x: number;
-  y: number;
-  z: number;
-}
+export interface Vec3 { x: number; y: number; z: number; }
+export interface AABB { min: Vec3; max: Vec3; }
 
-export interface AABB {
-  minX: number;
-  maxX: number;
-  minY: number;
-  maxY: number;
-  minZ: number;
-  maxZ: number;
+export interface WeaponUpgrade {
+  damage: number;   // multiplier e.g. 1.0 = base
+  fireRate: number; // multiplier
+  magSize: number;  // multiplier
 }
 
 export interface PlayerState {
   id: string;
   name: string;
-  position: Vector3;
+  color: number;
+  position: Vec3;
   rotation: number;
-  health: number;
-  maxHealth: number;
-  ammoAK: number;
-  maxAmmoAK: number;
-  magazineAK: number;
-  maxMagazineAK: number;
-  ammoPistol: number;
-  currentWeapon: 'ak47' | 'pistol';
-  money: number;
-  kills: number;
-  isDowned: number; // 0 = alive, >0 = timestamp when downed
+  hp: number;
+  maxHp: number;
+  isDown: boolean;
   isDead: boolean;
-  combo: number;
-  comboTimer: number;
-  speedBoost: boolean;
-  speedBoostTimer: number;
-  doubleDamage: boolean;
-  doubleDamageTimer: number;
-  isReloading: boolean;
-  reloadTimer: number;
   isSprinting: boolean;
   isCrouching: boolean;
-  isAiming: boolean;
-  akDamageBonus: number;
-  akFireRateBonus: number;
-  akMagazineBonus: number;
-  pistolDamageBonus: number;
-  pistolFireRateBonus: number;
+  weapon: 'ak47' | 'pistol';
+  ammoAkReserve: number;
+  money: number;
+  kills: number;
+  streak: number;
+  grenadeCount: number;
+  boosted: boolean;
+  boostType: string;
+  boostTimer: number;
+  weaponUpgrades: {
+    ak47: WeaponUpgrade;
+    pistol: WeaponUpgrade;
+  };
+  barricadeCount: number;
+  downTimer: number;
+  respawnTimer: number;
 }
 
 export interface ZombieState {
   id: string;
-  type: 'normal' | 'explosive' | 'acid' | 'boss';
-  position: Vector3;
-  rotation: number;
-  health: number;
-  maxHealth: number;
-  targetId: string | null;
-  state: 'idle' | 'chase' | 'attack' | 'dead' | 'exploding';
-  damageContrib: Record<string, number>;
-  wave: number;
-  // Boss specific
-  bossAttackState?: 'shockwave' | 'rush' | 'toxic' | 'none';
-  bossAttackTimer?: number;
-  rushTarget?: Vector3;
+  type: string;
+  position: Vec3;
+  hp: number;
+  maxHp: number;
+  isAlive: boolean;
+  modifiers?: string[];
+  attackTimer?: number;
+  attackCooldown?: number;
+  attackPhase?: string;
+  chargeTarget?: Vec3 | null;
+  meleeTimer?: number;
+  regenTimer?: number;
+  teleportTimer?: number;
+  summonTimer?: number;
+  aiTimer?: number;
+  damageMult?: number;
+  speedMult?: number;
+  armorMult?: number;
 }
 
 export interface AcidPool {
   id: string;
-  position: Vector3;
-  timer: number;
+  position: Vec3;
   radius: number;
+  timer: number;
+  damageTimer?: number;
 }
 
-export interface TrapState {
+export interface Barricade {
   id: string;
-  position: Vector3;
+  ownerId: string;
+  position: Vec3;
+  hp: number;
+  maxHp: number;
+}
+
+export interface Trap {
+  id: number;
+  position: Vec3;
   active: boolean;
   timer: number;
   type: 'electric' | 'flamethrower';
+  damageTimer: number;
 }
 
-export interface VendingMachine {
-  id: string;
-  position: Vector3;
+export interface CollisionBox {
+  aabb: AABB;
+  isSolid: boolean;
 }
 
-export interface MysteryBox {
-  position: Vector3;
-  available: boolean;
-}
-
-export interface GameState {
-  phase: 'menu' | 'playing' | 'wave_complete' | 'game_over' | 'victory';
-  wave: number;
-  maxWaves: number;
-  players: Record<string, PlayerState>;
-  zombies: Record<string, ZombieState>;
-  acidPools: AcidPool[];
-  traps: TrapState[];
-  waveTimer: number;
-  bossSpawned: boolean;
-}
-
-export interface NetworkPlayer {
-  id: string;
-  name: string;
-  position: Vector3;
-  rotation: number;
-  health: number;
-  isDowned: number;
-  isDead: boolean;
-  currentWeapon: 'ak47' | 'pistol';
-  isCrouching: boolean;
-  kills: number;
-  money: number;
-}
-
-export interface BulletHit {
-  zombieId: string;
-  damage: number;
-  shooterId: string;
-}
-
-export interface WeaponConfig {
-  damage: number;
-  fireRate: number;
-  range: number;
-  automatic: boolean;
-  magazineSize: number;
-  reloadTime: number;
-  spread: number;
-}
+export type GamePhase = 'menu' | 'waiting' | 'combat' | 'intermission' | 'victory' | 'defeat';
