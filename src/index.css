@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+/* ============================================================
+   ZOMBIE HORDE — Global Styles
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Game canvas */
+canvas {
+  display: block;
+  outline: none;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #111;
+}
+::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 3px;
+}
+
+/* Pointer lock cursor */
+.pointer-locked {
+  cursor: none;
+}
+
+/* ============================================================
+   HUD Animations
+   ============================================================ */
+
+@keyframes pulse {
+  from { opacity: 1; }
+  to   { opacity: 0.4; }
+}
+
+@keyframes flashIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes killFeedOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) scale(1); opacity: 0.4; }
+  50%       { transform: translateY(-15px) scale(1.3); opacity: 0.6; }
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 10px currentColor; }
+  to   { box-shadow: 0 0 25px currentColor, 0 0 50px currentColor; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ============================================================
+   Menu Particles
+   ============================================================ */
+.menu-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: float 4s ease-in-out infinite;
+}
+
+/* ============================================================
+   Utility Classes
+   ============================================================ */
+.game-font {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.hud-panel {
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 8px 12px;
+  backdrop-filter: blur(4px);
+}
+
+.neon-red {
+  color: #ff4444;
+  text-shadow: 0 0 10px rgba(255, 68, 68, 0.8);
+}
+
+.neon-green {
+  color: #44ff88;
+  text-shadow: 0 0 10px rgba(68, 255, 136, 0.8);
+}
+
+.neon-yellow {
+  color: #ffdd44;
+  text-shadow: 0 0 10px rgba(255, 221, 68, 0.8);
+}
+
+.neon-blue {
+  color: #4488ff;
+  text-shadow: 0 0 10px rgba(68, 136, 255, 0.8);
+}
+
+.neon-purple {
+  color: #aa44ff;
+  text-shadow: 0 0 10px rgba(170, 68, 255, 0.8);
+}
